@@ -1,0 +1,26 @@
+name: data_get
+conda_env: conda.yml
+
+entry_points:
+  main:
+    parameters:
+
+      input_file:
+        description: The path for the input file
+        type: str
+
+      artifact_name:
+        description: Name for the artifact
+        type: str
+
+      artifact_type:
+        description: Type for the artifact
+        type: str
+
+      artifact_description:
+        description: Description for the artifact
+        type: str
+
+
+    command: >-
+        python run.py  --input_file {input_file}  --artifact_name {artifact_name}  --artifact_type {artifact_type}  --artifact_description {artifact_description} 

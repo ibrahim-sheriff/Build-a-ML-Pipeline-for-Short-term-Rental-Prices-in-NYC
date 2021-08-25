@@ -1,11 +1,12 @@
-name: components
+name: pipeline
 channels:
   - conda-forge
   - defaults
-depenencies:
+dependencies:
   - mlflow=1.14.1
   - pyyaml=5.3.1
   - hydra-core=1.0.6
   - pip=20.3.3
   - pip:
       - wandb==0.10.31
+      - hydra-joblib-launcher==1.1.2

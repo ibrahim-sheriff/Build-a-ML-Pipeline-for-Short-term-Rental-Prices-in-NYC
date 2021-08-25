@@ -12,3 +12,5 @@ main:
     - "data_split"
     - "train_model"
     - "test_model"
+data:
+  sample: "data/sample1.csv"

@@ -7,7 +7,7 @@ import logging
 import wandb
 
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)-15s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger()
 
 
@@ -16,9 +16,6 @@ def go(args):
     run = wandb.init(job_type="{{cookiecutter.job_type}}")
     run.config.update(args)
 
-    # Download input artifact. This will also log that this script is using this
-    # particular version of the artifact
-    # artifact_local_path = run.use_artifact(args.input_artifact).file()
 
     ######################
     # YOUR CODE HERE     #
