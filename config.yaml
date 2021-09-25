@@ -5,12 +5,18 @@ main:
   project_name: nyc_airbnb
   experiment_name: development
   execute_steps:
-    - "data_get"
-    - "data_eda"
-    - "data_preprocess"
-    - "data_check"
-    - "data_split"
-    - "train_model"
-    - "test_model"
+    - data_get
+    - data_eda
+    - data_clean
+    - data_check
+    - data_split
+    - train_model
+    - test_model
 data:
   sample: "data/sample1.csv"
+etl:
+  min_price: 10
+  max_price: 350
+data_check:
+  kl_threshold: 0.2
+    

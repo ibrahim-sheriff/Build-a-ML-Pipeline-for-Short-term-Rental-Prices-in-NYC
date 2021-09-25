@@ -37,7 +37,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--input_file", 
         type=str,
-        help="The path for the input file",
+        help="Path for the input file",
         required=True
     )
 

@@ -29,23 +29,38 @@ def go(config: DictConfig):
                     "main",
                     parameters={
                         "input_file": os.path.join(root_path, config["data"]["sample"]),
-                        "artifact_name": "raw_data",
-                        "artifact_type": "data",
+                        "artifact_name": "raw_data.csv",
+                        "artifact_type": "raw_data",
                         "artifact_description": "Input raw dataset from csv file"
                     },
             )
         
-        if "data_eda" in steps_to_execute:
-            # TODO
-            pass
-        
-        if "data_preprocess" in steps_to_execute:
-            # TODO
-            pass
+        if "data_clean" in steps_to_execute:
+            _ = mlflow.run(
+                    os.path.join(root_path, "components", "data_clean"),
+                    "main",
+                    parameters={
+                        "input_artifact": "nyc_airbnb/raw_data.csv:latest",
+                        "output_artifact_name": "clean_data.csv",
+                        "output_artifact_type": "clean_data",
+                        "output_artifact_description": "Clean dataset with outliers removed",
+                        "min_price": config['etl']['min_price'],
+                        "max_price": config['etl']['max_price']
+                    },
+            )
         
         if "data_check" in steps_to_execute:
-            # TODO
-            pass
+            _ = mlflow.run(
+                    os.path.join(root_path, "components", "data_check"),
+                    "main",
+                    parameters={
+                        "csv": "nyc_airbnb/clean_data.csv:latest",
+                        "ref": "nyc_airbnb/clean_data.csv:reference",
+                        "kl_threshold": config['data_check']['kl_threshold'],
+                        "min_price": config['etl']['min_price'],
+                        "max_price": config['etl']['max_price']
+                    },
+            )
         
         if "data_split" in steps_to_execute:
             # TODO
