@@ -1,0 +1,41 @@
+name: train_random_forest
+conda_env: conda.yml
+
+entry_points:
+  main:
+    parameters:
+
+      trainval_artifact:
+        description: Train dataset
+        type: str
+
+      val_size:
+        description: Size of the validation split. Fraction of the dataset, or number of items
+        type: str
+
+      random_state:
+        description: Seed for the random number generator. Use this for reproducibility
+        type: str
+        default: 42
+
+      stratify:
+        description: Column to use for stratification (if any)
+        type: str
+        default: 'none'
+
+      rf_config:
+        description: Random forest configuration. A path to a JSON file with the configuration that will
+                     be passed to the scikit-learn constructor for RandomForestRegressor.
+        type: str
+
+      output_artifact:
+        description: Name for the output artifact
+        type: str
+
+    command: >-
+      python run.py --trainval_artifact {trainval_artifact} \
+                    --val_size {val_size} \
+                    --random_state {random_state} \
+                    --stratify {stratify} \
+                    --rf_config {rf_config} \
+                    --output_artifact {output_artifact}

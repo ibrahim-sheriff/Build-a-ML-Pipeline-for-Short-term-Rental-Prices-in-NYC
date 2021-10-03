@@ -1,8 +1,9 @@
 import os
+import json
 import hydra
 import mlflow
 import tempfile
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 
 
 @hydra.main(config_name="config")
@@ -22,7 +23,6 @@ def go(config: DictConfig):
 
     with tempfile.TemporaryDirectory() as tmp_dir:
 
-        
         if "data_get" in steps_to_execute:
             _ = mlflow.run(
                     os.path.join(root_path, "components", "data_get"),
@@ -63,16 +63,49 @@ def go(config: DictConfig):
             )
         
         if "data_split" in steps_to_execute:
-            # TODO
-            pass
+            _ = mlflow.run(
+                    os.path.join(root_path, "components", "data_split"),
+                    "main",
+                    parameters={
+                        "input_data": "nyc_airbnb/clean_data.csv:latest",
+                        "test_size": config['data']['test_size'],
+                        "random_state": config['main']['random_state'],
+                        "stratify": config['data']['stratify']
+                    },
+            )
         
-        if "train_model" in steps_to_execute:
-            # TODO
-            pass
-        
+        if "train_random_forest" in steps_to_execute:
+            
+            # NOTE: we need to serialize the random forest configuration into JSON
+            rf_config = os.path.abspath("rf_config.json")
+            #with open(rf_config, "w+") as fp:
+            #    json.dump(dict(config["pipeline"].items()), fp)
+            
+            with open(rf_config, "w+") as fp:
+                fp.write(OmegaConf.to_yaml(config["pipeline"]))
+    
+            _ = mlflow.run(
+                    os.path.join(root_path, "components", "train_random_forest"),
+                    "main",
+                    parameters={
+                        "trainval_artifact": "nyc_airbnb/trainval_data.csv:latest",
+                        "val_size": config['data']['val_size'],
+                        "random_state": config['main']['random_state'],
+                        "stratify": config['data']['stratify'],
+                        "rf_config": rf_config,
+                        "output_artifact": config['pipeline']['export_artifact']
+                    },
+            )            
+            
         if "test_model" in steps_to_execute:
-            # TODO
-            pass
+            _ = mlflow.run(
+                    os.path.join(root_path, "components", "test_model"),
+                    "main",
+                    parameters={
+                        "mlflow_model": "nyc_airbnb/" + config['pipeline']['export_artifact'] + ":prod",
+                        "test_dataset": "nyc_airbnb/test_data.csv:latest"
+                    },
+            )   
 
 if __name__ == "__main__":
     go()

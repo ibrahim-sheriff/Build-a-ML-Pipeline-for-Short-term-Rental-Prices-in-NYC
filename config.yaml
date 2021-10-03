@@ -10,13 +10,52 @@ main:
     - data_clean
     - data_check
     - data_split
-    - train_model
-    - test_model
+    - train_random_forest
+    #- test_model
+  random_state: 42
 data:
   sample: "data/sample1.csv"
+  val_size: 0.2
+  test_size: 0.2
+  stratify: "neighbourhood_group"
 etl:
   min_price: 10
   max_price: 350
 data_check:
   kl_threshold: 0.2
+pipeline:
+  tfidf:
+    max_features: 10
+  model:
+    random_forest:
+      n_estimators: 100
+      max_depth: 15
+      min_samples_split: 4
+      min_samples_leaf: 3
+      # Here -1 means all available cores
+      n_jobs: -1
+      criterion: mae
+      max_features: 0.33
+      # DO not change the following
+      oob_score: true
+  features:
+    numerical:
+      - "latitude"
+      - "longitude"
+      - "minimum_nights"
+      - "number_of_reviews"
+      - "reviews_per_month"
+      - "calculated_host_listings_count"
+      - "availability_365"
+    ordinal_categ:
+      - "room_type"
+    categorical:
+      - "neighbourhood_group"
+    date:
+      - "last_review"
+    text:
+      - "name"
+  export_artifact: "random_forest_pipeline"
+
+
     

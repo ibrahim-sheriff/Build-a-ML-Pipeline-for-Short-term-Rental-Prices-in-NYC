@@ -1,0 +1,68 @@
+#!/usr/bin/env python
+"""
+This step takes the best model, tagged with the "prod" tag, and tests it against the test dataset
+"""
+import wandb
+import mlflow
+import logging
+import argparse
+import pandas as pd
+from sklearn.metrics import mean_absolute_error, r2_score
+
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
+logger = logging.getLogger()
+
+
+def go(args):
+
+    run = wandb.init(job_type="test_model")
+    run.config.update(args)
+
+    logger.info("Downloading artifacts")
+    # download model artifact
+    model_local_path = run.use_artifact(args.mlflow_model).download()
+    # download test dataset
+    test_dataset_path = run.use_artifact(args.test_dataset).file()
+
+    # read test dataset
+    X_test = pd.read_csv(test_dataset_path)
+    y_test = X_test.pop("price")
+
+    logger.info("Loading model and performing inference on test set")
+    model_pipe = mlflow.sklearn.load_model(model_local_path)
+    y_pred = model_pipe.predict(X_test)
+
+    logger.info("Scoring")
+    r_squared = r_squared = r2_score(y_test, y_pred)
+    mae = mean_absolute_error(y_test, y_pred)
+
+    logger.info(f"Test data R squared: {r_squared}")
+    logger.info(f"Test data mean absolute error: {mae}")
+
+    # log MAE and r2
+    run.summary['r2'] = r_squared
+    run.summary['mae'] = mae
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description="Test the provided model against the test dataset")
+
+    parser.add_argument(
+        "--mlflow_model",
+        type=str, 
+        help="Input MLFlow model",
+        required=True
+    )
+
+    parser.add_argument(
+        "--test_dataset",
+        type=str, 
+        help="Test dataset",
+        required=True
+    )
+
+    args = parser.parse_args()
+
+    go(args)
