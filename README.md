@@ -30,7 +30,7 @@ pip install mlflow
 
 Building a reproducible ML pipeline will require different components which will be needed to be contained in there own environment. The following image shows the pipeline contained within weights and biases. You can check the pipeline at W&B [here](https://wandb.ai/ibrahimsherif/nyc_airbnb/overview?workspace=user-ibrahimsherif)
 
-![Pipeline](/images/pipeline_graph_view.png)
+![Pipeline](/images/pipeline_graph_view.PNG)
 
 The pipeline shows each component with input and output artifacts for each component.
 - data_get: Upload the data from local path to W&B
