@@ -176,7 +176,7 @@ def go(args):
         description="Random forest inference pipelie"
     )
     
-    artifact.add_dir(args.output_artifact)
+    artifact.add_dir("models/random_forest")
     run.log_artifact(artifact)
     
     logger.info("Create feature importance model")
