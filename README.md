@@ -72,7 +72,7 @@ Run the pipeline directly from github using a different sample of data.
 ```bash
 mlflow run https://github.com/ibrahim-sheriff/Build-a-ML-Pipeline-for-Short-term-Rental-Prices-in-NYC \
             -v [RELEASE_VERSION] \
-            -P hydra_options="etl.sample='sample2.csv'"
+            -P hydra_options="data.sample='sample2.csv'"
 ```
 
 ## License
