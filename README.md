@@ -5,8 +5,6 @@ The second project for the [ML DevOps Engineer Nanodegree](https://www.udacity.c
 
 ## Description
 
-This project is part of Unit 3: Clean Code Principles. The problem is to predict credit card customers that are most likely to churn using clean code best practices.
-
 This project is part of Unit 3: Building a Reproducible Model Workflow. The problem is to build a complete end to end ML pipeline to predict rental prices for airbnb rentals and make it reusable.
 
 ## Prerequisites
